@@ -19,6 +19,8 @@ wlpackage=weblogic.ant.taskdefs.build.WLPackageTask
 wlappc=weblogic.ant.taskdefs.j2ee.Appc
 
 
+
+在weblogic中ant集成安装路径如下：
 weblogic ant：
 /midware/wls10.3.6/modules/org.apache.ant_1.7.1/bin/ant
 #
