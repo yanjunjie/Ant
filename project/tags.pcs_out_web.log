@@ -1,0 +1,40 @@
+
+clean:
+   [delete] Deleting directory D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web
+
+init:
+    [mkdir] Created dir: D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web
+    [mkdir] Created dir: D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\classes
+    [mkdir] Created dir: D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\test-classes
+
+checkout:
+      [svn] <Export> started ...
+      [svn] <Export> finished.
+
+compile:
+    [javac] Compiling 58 source files to D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\classes
+    [javac] D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\src\com\bqs\util\Base64Support.java:11: 警告：sun.misc.BASE64Encoder 是 Sun 的专用 API，可能会在未来版本中删除
+    [javac] import sun.misc.BASE64Encoder;
+    [javac]                ^
+    [javac] D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\src\com\bqs\util\Base64Support.java:81: 警告：sun.misc.BASE64Encoder 是 Sun 的专用 API，可能会在未来版本中删除
+    [javac] 		BASE64Encoder encoder = new BASE64Encoder();
+    [javac] 		^
+    [javac] D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\src\com\bqs\util\Base64Support.java:81: 警告：sun.misc.BASE64Encoder 是 Sun 的专用 API，可能会在未来版本中删除
+    [javac] 		BASE64Encoder encoder = new BASE64Encoder();
+    [javac] 		                            ^
+    [javac] 注意：D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\src\com\bqs\util\EJBLoginUtil.java 使用了未经检查或不安全的操作。
+    [javac] 注意：要了解详细信息，请使用 -Xlint:unchecked 重新编译。
+    [javac] 3 警告
+   [delete] Deleting directory D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\src\com
+     [copy] Copying 2 files to D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\classes
+
+build:
+     [echo] create war file ... ...
+      [war] Building war: D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\tags.pcs_out_web.20151209.150224.war
+      [war] Warning: selected war files include a WEB-INF/web.xml which will be ignored (please use webxml attribute to war task)
+      [zip] Building zip: D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\tags.pcs_out_web.20151209.150224.zip
+   [delete] Deleting directory D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\classes
+   [delete] Deleting directory D:\pbccrc_svn\build\pcs\tags\pcs_out_web\pcs_out_web\target\test-classes
+
+BUILD SUCCESSFUL
+Total time: 10 seconds

@@ -1,0 +1,98 @@
+
+<project name="pcs_out_web" basedir=".">
+
+    <property name="project" value="pcs_out_web" />
+    <property name="src" value="${project}/src" />
+    <property name="resources" value="${project}/src"/>
+    <property name="test" value="${project}/test"></property>
+    <property name="target" value="${project}/target"></property>
+    <property name="main-target" value="${project}/target/classes"/>
+    <property name="test-target" value="${project}/target/test-classes"/>
+
+    <property name="web-root" value="${project}/WebRoot"/>
+    <property file="tags.pcs_out_web.build.properties"/>
+    <property name="environment" value="${environment}" />
+    <property name="ant-lib" value="${ant.home}/lib"/>
+    <property name="tomcat-lib" value="${tomcat.home}/lib"/>
+ 
+    <path id="classpath">
+        <fileset dir="${ant-lib}" includes="***.jar"></fileset>
+        <fileset dir="${tomcat-lib}" includes="***.jar"></fileset>
+        <fileset dir="${web-root}/WEB-INF/lib" includes="***.jar"></fileset>
+    </path>
+
+    <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" />
+
+    <target name="clean">
+        <delete dir="${project}"></delete>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${project}"/>
+        <mkdir dir="${main-target}"/>
+        <mkdir dir="${test-target}"/>
+    </target>
+  
+    <target name="checkout" depends="init">
+        <svn username="${svn.username}" password="${svn.password}">
+            <export srcUrl="${svn.url}" revision="HEAD" destPath="${project}"  force="true" />
+        </svn>
+    </target>
+
+    <target name="compile" depends="checkout">
+        <javac srcdir="${src}" destdir="${main-target}" encoding="UTF-8" debug="true" includeAntRuntime="false" fork="true" executable="D:\Java\jdk1.6.0_45\bin\javac">
+            <classpath refid="classpath"></classpath>
+        </javac>
+        <delete dir="${resources}/com"></delete>
+        <copy todir="${main-target}">
+            <fileset dir="${resources}">
+                <exclude name="sql/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo>create war file ... ...</echo>
+        <tstamp>
+        		<format property="DSTAMP" pattern="yyyyMMdd" locale="zh" />
+        		<format property="TSTAMP" pattern="HHmmss" locale="zh" />
+        </tstamp>
+        <war destfile="${target}/${environment}.${deploy.name}.${DSTAMP}.${TSTAMP}.war" webxml="${web-root}/WEB-INF/web.xml">
+            <fileset dir="${web-root}"></fileset>
+            <classes dir="${main-target}"></classes>
+        </war>
+        <zip destfile="${target}/${environment}.${deploy.name}.${DSTAMP}.${TSTAMP}.zip">
+        		<zipfileset dir="${web-root}"></zipfileset>
+            <zipfileset dir="${main-target}" prefix="WEB-INF/classes"></zipfileset>
+        </zip>
+        <delete dir="${main-target}"></delete>
+        <delete dir="${test-target}"></delete>
+    </target>
+      
+<!--
+      
+    <target name="shutdowntomcat" description="========shutdowntomcat===========">
+
+        <exec executable="${tomcat.home}/bin/shutdown.bat" failonerror="false"></exec>
+
+        <sleep seconds="10"/>
+
+        <delete dir="${tomcat.home}/webapps/${deploy.name}"></delete>
+    </target>
+      
+    <target name="startuptomcat" description="========startuptomcat===========">
+        <sleep seconds="5"/>
+
+        <exec executable="${tomcat.home}/bin/startup.bat" failonerror="false"></exec>
+
+    </target>
+
+    <target name="deploy" depends="build">
+        <ant target="shutdowntomcat"/>
+        <copy file="${target}/${deploy.name}.war" todir="${tomcat.home}/webapps" />
+        <ant target="startuptomcat"/> 
+    </target>
+    
+-->
+
+</project> 
