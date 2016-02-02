@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="jdbc-rowsets" default="all" basedir=".">
+
+	<!-- set global properties for this build -->
+	<property file="../../../examples.properties"/>
+	<property name="build.compiler" value="${compiler}"/>
+	<property name="source" value="${basedir}" />
+	<property name="bean.ear" value="jdbcRowSetsEar"/>
+  <property name="dist" value="${source}/${bean.ear}"/>
+  <property name="ejb.name" value="jdbcRowSetsEjb"/>
+  <property name="war.name" value="jdbcRowSetsWar"/>
+  <property name="package" value="examples/jdbc/rowsets"/>
+
+  <target name="all" depends="build, deploy"/>
+  
+  <target name="build" depends="clean,
+                                prepare.example,
+                                build.ear"/>
+
+  <target name="clean">
+    <delete dir="${dist}" failonerror="false"/>
+    <delete dir="${examples.build.dir}/${bean.ear}" failonerror="false"/>
+  </target>
+
+  <!-- prepare directories for split directory deployment -->
+  <target name="prepare.example"
+    description="Prepare the example for compilation and deployment.">
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${dist}/META-INF"/>
+    <mkdir dir="${dist}/${ejb.name}"/>
+    <mkdir dir="${dist}/${war.name}"/>
+    <mkdir dir="${dist}/${war.name}/WEB-INF"/>
+    <mkdir dir="${dist}/${war.name}/images"/>
+    <mkdir dir="${dist}/${ejb.name}/${package}"/>
+    <antcall target="copy.files"/>
+  </target>
+
+  <!-- copy files for split directory deployment -->
+  <target name="copy.files"
+    description="Copy example files to distribution structure.">
+    <copy todir="${dist}/META-INF">
+      <fileset dir="${source}">
+        <include name="*application.xml"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist}/${war.name}">
+      <fileset dir="${source}">
+        <include name="*.jsp"/>
+      </fileset>
+      <fileset dir="${examples.src.dir}/examples/common/base/webapp">
+        <include name="ExamplesHeader.jsp"/>
+        <include name="ExamplesFooter.jsp"/>
+        <include name="wls_examples.css"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist}/${war.name}/images">
+      <fileset dir="${examples.src.dir}/examples/images">
+        <include name="oracle_logo.gif"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist}/${war.name}/WEB-INF/src/${package}">
+      <fileset dir="${source}">
+        <include name="*Servlet.java"/>
+        <include name="SearchPredicate.java"/>
+      </fileset>
+    </copy>
+    <copy file="${source}/taglibs-dbtags.tld" todir="${dist}/${war.name}/WEB-INF"/>
+    <copy file="${source}/weblogic.xml" todir="${dist}/${war.name}/WEB-INF"/>
+    <copy file="${source}/web.xml" todir="${dist}/${war.name}/WEB-INF"/>
+    <!-- rename bean to .ejb so that wlcompile
+    can recognize its to be EJBGen'd -->
+    <copy file="${source}/PatientSessionEJB.java"
+      tofile="${dist}/${ejb.name}/${package}/PatientSessionEJB.ejb"/>
+  </target>
+
+  <!-- compile EAR for split directory deployment -->
+  <target name="build.ear">
+    <copy file="${source}/taglibs-dbtags.jar"
+      todir="${examples.build.dir}/${bean.ear}/${war.name}/WEB-INF/lib"/>
+    <wlcompile srcdir="${dist}" destdir="${examples.build.dir}/${bean.ear}"
+               includes="${ejb.name}, ${war.name}">
+      <ejbgen source="${sourceVersion}"/>
+      <javac deprecation="${deprecation}" />
+      <javac debug="${debug}" debugLevel="${debugLevel}" />
+    </wlcompile>
+    <wlappc source="${examples.build.dir}/${bean.ear}"
+      debug="${debug}" deprecation="${deprecation}"/>
+  </target>
+
+  <!-- deploy split directory application -->
+  <target name="deploy" description="Deploy ear to WebLogic on ${wls.hostname}:${wls.port}.">
+    <wldeploy
+      user="weblogic"
+      password="welcome1"
+      adminurl="t3://${wls.hostname}:${wls.port}"
+      action="deploy"
+      source="${examples.build.dir}/${bean.ear}"
+      failonerror="false"/>
+  </target>
+
+    <!-- package the application a J2EE formatted exploded ear -->
+  <target name="package.exploded.ear">
+    <wlpackage srcdir="${dist}" destdir="${examples.build.dir}/${bean.ear}"
+      toDir="${dist}" />
+  </target>
+  
+    <!-- Setup database tables in PointBase-->
+  <target name="db.setup" description="Database setup">
+    <sql driver="org.apache.derby.jdbc.ClientDriver"
+       url="jdbc:derby://localhost:1527/examples;ServerName=localhost;databaseName=examples"
+       userid="examples" password="examples"
+       onerror="continue"
+       src="./table.ddl"/>
+  </target>
+
+  <!-- run the example -->
+ <target name="run" description="Run example.">
+   <openbrowser url="http://${wls.hostname}:${wls.port}/jdbc_rowsets/RowSetsServlet"/>
+ </target>
+
+</project>

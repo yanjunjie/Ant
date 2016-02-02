@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="jdbc.datasource.basic" default="all" basedir=".">
+
+  <property file="../../../../examples.properties"/>
+  <property name="build.compiler" value="${compiler}"/>
+
+  <!-- set global properties for this build -->
+  <property name="source" value="${basedir}"/>
+
+  <target name="all" depends="build"/>
+
+  <target name="build" depends="compile, compile.servlet"/>
+
+  <!-- Compile the SimpleSql class into the clientclasses directory -->
+  <target name="compile">
+    <javac srcdir="${source}"
+      destdir="${client.classes.dir}"
+      includes="SimpleSql.java"
+      deprecation="${deprecation}" debug="${debug}" debugLevel="${debugLevel}"
+    />
+  </target>
+
+  <!-- Compile simplesqlServlet class into WEB-INF/classes directory of the
+  Examples Web App -->
+  <target name="compile.servlet">
+    <javac srcdir="${source}"
+      destdir="${ex.webapp.classes.dir}"
+      includes="SimpleSqlServlet.java"
+      classpath="${ex.classpath}"
+      deprecation="${deprecation}" debug="${debug}" debugLevel="${debugLevel}"
+    />
+  </target>
+
+  <!-- Run the Simple SQL example -->
+  <target name="run">
+  <java classname="examples.jdbc.datasource.basic.SimpleSql" fork="yes" failonerror="true">
+    <classpath>
+      <pathelement path="${ex.classpath}"/>
+    </classpath>
+  </java>
+  </target>
+
+  <!-- run the example -->
+  <target name="run.webapp" description="Run example.">
+    <openbrowser
+      url="http://${wls.hostname}:${wls.port}/examplesWebApp/SimpleSqlServlet"/>
+  </target>
+
+  <target name="clean">
+  	<delete dir="${client.classes.dir}/examples/jdbc/datasource/basic" failonerror="false"/>
+  </target>
+
+</project>
