@@ -28,4 +28,4 @@ weblogic ant：
 weblogic.jar:
 /midware/wls10.3.6/wlserver_10.3/server/lib/weblogic.jar
 ##
-如果手动编译samples的样例程序，最好将weblogic.jar 拷贝到ant 的 lib目录下
+如果手动编译samples的样例程序，最好将weblogic.jar 拷贝到ant 的 lib目录下，否则会出现 找不到weblogic.ant.taskdefs.build.WLCompileTask 
